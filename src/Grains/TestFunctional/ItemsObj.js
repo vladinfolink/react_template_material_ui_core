@@ -1,5 +1,5 @@
-export default {
-  ps: {
+export default 
+   {
     12: {
       value: 'name_0'
     },
@@ -10,5 +10,5 @@ export default {
       value: 'name_2'
     }
   }
-};
+
 
