@@ -1,10 +1,12 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState } from 'react';
 import TestItem from './components/TestItem';
 import ItemsObj from './ItemsObj';
-Object.freeze(ItemsObj)
+import { Button } from 'antd';
+Object.freeze(ItemsObj);
 
 const TestFunctional = () => {
 	const [state, nextState] = useState(ItemsObj);
+	const [showItems, changeShowItems] = useState(true);
 
 	const changeItem = (event, itemKey) => {
 		state[itemKey].value = event.target.value;
@@ -12,12 +14,14 @@ const TestFunctional = () => {
 	};
 
 	const deleteItemFromState = itemKey => {
-		delete state[itemKey];
-		nextState({ ...state });
+		let s = { ...state };
+		delete s[itemKey];
+		nextState({ ...s });
 	};
 
 	const items = Object.entries(state).map(item => (
 		<TestItem
+			key={item[0]}
 			itemKey={item[0]}
 			value={item[1].value}
 			changeItem={event => changeItem(event, item[0])}
@@ -25,7 +29,14 @@ const TestFunctional = () => {
 		/>
 	));
 
-	return <Fragment>{items}</Fragment>;
+	return (
+		<Fragment>
+			<Button onClick={() => changeShowItems(!showItems)} type="dange">
+				Toggle Items
+			</Button>
+			{showItems && items}
+		</Fragment>
+	);
 };
 
 export default TestFunctional;
