@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import TestItem from './components/TestItem.js';
 import ItemsObj from './ItemsObj';
+import { Button } from 'antd';
 Object.freeze(ItemsObj);
 
 class Test extends Component {
@@ -10,22 +11,12 @@ class Test extends Component {
 		this.state = { ...ItemsObj, testObjectKey: this.props.testObjectKey || '__testObjectKey' };
 	}
 
-	state = { ...ItemsObj }; //FIXME: mounting (constructor)
-	//State initialization, don't cause side effects																						0
-
 	static getDerivedStateFromProps(nextProps, prevState) {
 		//FIXME: mounting + TODO: updating															1			=>5
 		// When props change, sync state, don't cause side effects
 		console.log('__getDerivedStateFromProps', nextProps);
 
-		return prevState;
-	}
-
-	shouldComponentUpdate(nextProps, nextState, nextContext) {
-		//TODO: (UPDATE) => allows cancelling the updating process				=>6
-		console.log('shouldComponentUpdate');
-		// continue update ? return true : return false; => compare this.props with nextProps
-		return true;
+		return 0;
 	}
 
 	getSnapshotBeforeUpdate(prevProps, prevState) {
@@ -36,15 +27,22 @@ class Test extends Component {
 		return { pixels: 12 };
 	}
 
-	componentDidUpdate(prevProps, prevState, snapshot) {
-		//TODO:  (UPDATE)																																	=>10
-		//==> CAN CAUSE SIDE EFFECTS (ONLY ASYNC AJAX)
-		console.log('componentDidUpdate', 'snapshot: ', snapshot);
-	}
-
 	componentDidMount() {
 		//FIXME: mounting										==>CAUSE SIDE EFFECT, DON'T CALL setState()	SYNCHRONOUSLY		4
 		console.log(`componentDidMount`);
+	}
+
+	shouldComponentUpdate(nextProps, nextState, nextContext) {
+		//TODO: (UPDATE) => allows cancelling the updating process				=>6
+		console.log('shouldComponentUpdate');
+		// continue update ? return true : return false; => compare this.props with nextProps
+		return true;
+	}
+
+	componentDidUpdate(prevProps, prevState, snapshot) {
+		//TODO:  (UPDATE)																																	=>10
+		//==> CAN CAUSE SIDE EFFECTS (ONLY ASYNC AJAX); fetch new data frpom server
+		console.log('componentDidUpdate', 'snapshot: ', snapshot);
 	}
 
 	componentWillUnmount() {
@@ -79,7 +77,14 @@ class Test extends Component {
 				deleteItemHandler={this.deleteItemHandler.bind(this, item[0])}
 			/>
 		));
-		return <Fragment>{ps}</Fragment>;
+		return (
+			<Fragment>
+				<Button onClick={this.props.changeTestUpdate} type="danger">
+					change testUpdate from parent
+				</Button>
+				{this.props.testUpdate && ps}
+			</Fragment>
+		);
 	}
 }
 
