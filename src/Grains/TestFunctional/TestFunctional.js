@@ -1,12 +1,15 @@
 import React, { Fragment, useState, useEffect, memo } from 'react'
 import TestItem from './components/TestItem'
 import ItemsObj from './ItemsObj'
+import AuthContext from '../../context/AuthContext'
+import { Button } from 'antd'
 
 Object.freeze(ItemsObj)
 
 const TestFunctional = props => {
   const [state, nextState] = useState(ItemsObj)
   const [showItems, changeShowItems] = useState(true)
+  const [isAuth, changeIsAuth] = useState(true)
 
   const changeItem = (event, itemKey) => {
     state[itemKey].value = event.target.value
@@ -48,10 +51,26 @@ const TestFunctional = props => {
   }, [props.testUpdateProps])
 
   return (
-    <Fragment>
-      {props.children}
-      {items}
-    </Fragment>
+    <AuthContext.Provider value={{ isAuth: isAuth, changeIsAuth: changeIsAuth }}>
+      <Button
+        onClick={() => {
+          return changeIsAuth(!isAuth)
+        }}
+        type='primary'
+			>
+				changeIsAuth
+			</Button>
+      <div
+        style={{
+          border: '1px solid black'
+        }}
+			>
+        <Fragment>
+          {props.children}
+          {items}
+        </Fragment>
+      </div>
+    </AuthContext.Provider>
   )
 }
 
